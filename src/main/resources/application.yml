@@ -1,0 +1,25 @@
+server:
+  tomcat: #tomcat服务器配置
+    max-threads: 700
+    uri-encoding: UTF-8
+  compression:
+    enabled: true
+    mime-types: application/json,application/javascript,text/html,text/xml,text/plain,text/css
+  port: 18111
+spring:
+  profiles:
+#    include: orm_dev
+    active: dev
+  devtools.restart.exclude: static/**,public/**
+  thymeleaf: #thymeleaf模板引擎
+    cache: false # Enable template caching.
+    check-template-location: true # Check that the templates location exists.
+    enabled: true # Enable MVC Thymeleaf view resolution.
+    encoding: UTF-8 # Template encoding.
+    mode: HTML # Template mode to be applied to templates. See also StandardTemplateModeHandlers.
+    prefix: "classpath:/pages/" # Prefix that gets prepended to view names when building a URL.
+    suffix: ".html"  # Suffix that gets appended to view names when building a URL.
+  freemarker:
+    cache: false
+    template-loader-path: "classpath:/pages/"
+    enabled: true

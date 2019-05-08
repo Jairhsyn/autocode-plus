@@ -1,0 +1,21 @@
+# Created by .ignore support plugin (hsz.mobi)
+*.iml
+.classpath
+.project
+.idea/
+.settings/
+target/
+logs/
+cache/
+dist/
+logDir_IS_UNDEFINED/
+node_modules/
+npm-debug.log
+
+*-production.yml
+*-production.properties
+
+*-prod.yml
+*-prod.properties
+
+*.map

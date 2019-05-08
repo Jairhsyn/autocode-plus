@@ -1,0 +1,5 @@
+@Rest(${table_name}.class)
+@Rest(${table_name}.class)
+@Rest(${table_name}.class)
+@Rest(${table_name}.class)
+@Rest(${table_name}.class)
