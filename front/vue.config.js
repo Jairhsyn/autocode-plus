@@ -4,6 +4,8 @@ module.exports = {
     productionSourceMap: undefined,
     parallel: undefined,
     css: undefined,
+    outputDir: '../src/main/resources/pages',
+    assetsDir: 'static',
 
     devServer: {
         hot: true,

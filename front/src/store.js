@@ -5,18 +5,28 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        context: {},
-        customConfig: {},
-        currentStep: 0,
+        sysConfig: {
+            rootDir: 'temp',
+            sourcePath: '/src/main/java/',
+            resourcePath: '/src/main/resources/',
+            modelPackage: 'tech.washmore.model',
+            servicePackage: 'tech.washmore.service',
+            daoPackage: 'tech.washmore.dao',
+            mapperPath: 'mappers',
+            tablePrefixes: [],
+            tables: [],
+        },
+        extConfig: {},
         dbConfig: {},
-        selectedTables: [],
+        currentStep: 0,
     },
     mutations: {
-        updateCustomConfig(state, payload) {
-            state.customConfig = {...state.customConfig, ...payload};
+        updateExtConfig(state, payload) {
+            state.extConfig = {...state.customConfig, ...payload};
         },
-        updateContext(state, payload) {
-            state.context = {...state.context, ...payload};
+        updateSysConfig(state, payload) {
+            state.sysConfig = {...state.sysConfig, ...payload};
+            console.info('state', state, 'payload', payload)
         },
         updateDbConfig(state, payload) {
             state.dbConfig = {...state.dbConfig, ...payload};
@@ -27,13 +37,6 @@ export default new Vuex.Store({
         minus(state) {
             state.currentStep--;
         },
-        initDbConfig(state, payload) {
-            state.dbConfig = {...payload};
-        },
-        updateSelectedTables(state, payload) {
-            state.selectedTables = payload;
-        },
-
     },
     actions: {}
 })

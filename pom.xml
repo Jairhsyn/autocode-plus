@@ -72,7 +72,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>autocode-plus-core</finalName>
+        <finalName>autocode-plus</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

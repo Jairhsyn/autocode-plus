@@ -14,8 +14,10 @@
         </el-main>
         <el-footer>
             <div style="width: 60%;margin: 0 auto;display: flex;justify-content: space-around">
-                <el-button style="margin-top: 12px;" @click="prev">上一步</el-button>
-                <el-button style="margin-top: 12px;" @click="next">{{$store.state.currentStep>=2?"完成":"下一步"}}
+                <el-button style="margin-top: 12px;" @click="prev" :disabled="$store.state.currentStep===0">上一步
+                </el-button>
+                <el-button style="margin-top: 12px;" @click="next" :disabled="$store.state.currentStep>2">
+                    {{$store.state.currentStep==2?"执行":($store.state.currentStep>2?"已完成":"下一步")}}
                 </el-button>
             </div>
         </el-footer>
@@ -33,12 +35,12 @@
                         route: '/choose',
                     },
                     {
-                        title: '生成方案配置',
+                        title: '系统配置',
                         route: '/config',
                     },
                     {
-                        title: '开始执行',
-                        route: '/invoke',
+                        title: '自定义选项',
+                        route: '/custom',
                     },
                 ],
                 active: 0

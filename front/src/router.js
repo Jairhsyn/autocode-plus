@@ -11,8 +11,8 @@ export default new Router({
             component: () => import('./views/Home.vue'),
             children: [
                 {
-                    path:'',
-                    name:'home',
+                    path: '',
+                    name: 'home',
                     redirect: '/init',
                 },
                 {
@@ -24,6 +24,11 @@ export default new Router({
                     path: '/config',
                     name: 'config',
                     component: () => import('./views/Config.vue')
+                },
+                {
+                    path: '/custom',
+                    name: 'custom',
+                    component: () => import('./views/Custom.vue')
                 }
             ]
         },

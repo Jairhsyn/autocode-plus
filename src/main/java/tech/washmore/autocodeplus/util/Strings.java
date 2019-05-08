@@ -13,6 +13,7 @@ public class Strings {
         if (param == null || "".equals(param.trim())) {
             return "";
         }
+        param=param.toLowerCase();
         int len = param.length();
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++) {

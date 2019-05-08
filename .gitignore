@@ -19,3 +19,5 @@ npm-debug.log
 *-prod.properties
 
 *.map
+
+src/main/resources/pages/

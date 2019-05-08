@@ -22,6 +22,16 @@
             <el-form-item label="mapper.xml路径">
                 <el-input v-model="config.mapperPath"></el-input>
             </el-form-item>
+            <el-form-item label="表名前缀列表">
+                <el-select
+                        v-model="config.tablePrefixes"
+                        multiple
+                        filterable
+                        allow-create
+                        default-first-option
+                        placeholder="请输入表前缀(如果需要的话)" style="width: 100%;">
+                </el-select>
+            </el-form-item>
         </el-form>
     </div>
 </template>
@@ -38,39 +48,38 @@
                     servicePackage: 'tech.washmore.service',
                     daoPackage: 'tech.washmore.dao',
                     mapperPath: 'mappers',
+                    tablePrefixes: [],
                     tables: [],
                 },
             }
         },
         name: "Config",
-        mounted: function () {
-            // axios.get('/methods/all').then((res) => {
-            //     this.methods = res.data;
-            // })
-            this.config.tables = this.$store.state.selectedTables;
-
-        },
+        mounted:
+            function () {
+                this.config = this.$store.state.sysConfig;
+            }
+        ,
         computed: {
             currentStep: function () {
                 return this.$store.state.currentStep;
             }
-        },
+        }
+        ,
         watch: {
             currentStep: function (newV, oldV) {
                 if (oldV === 1 && newV === 2) {
-                    this.invoke();
+                    this.commitSysConfig();
                 } else if (oldV === 1 && newV === 0) {
                     this.$router.push('/select')
                 }
-            },
-        },
+            }
+            ,
+        }
+        ,
         methods: {
-            invoke: function () {
-                axios.post('/code/process', this.config).then((res) => {
-                    console.info('res', res);
-                }).catch((err) => {
-                    console.error('err', err);
-                })
+            commitSysConfig: function () {
+                this.$store.commit('updateSysConfig', this.config);
+                this.$router.push('/custom')
             }
         }
     }

@@ -24,11 +24,12 @@
         },
         name: "Select",
         mounted: function () {
+
             axios.get('/table/all').then((res) => {
                 this.tables = res.data;
                 this.selectedTables = this.tables.map(t => t.TABLE_NAME);
-                if (this.$store.state.selectedTables.length > 0) {
-                    this.selectedTables = this.$store.state.selectedTables;
+                if (this.$store.state.sysConfig.tables.length > 0) {
+                    this.selectedTables = this.$store.state.sysConfig.tables;
                 }
                 this.checkAll = this.selectedTables.length === this.tables.length;
                 this.isIndeterminate = this.selectedTables.length > 0 && this.selectedTables.length < this.tables.length;
@@ -58,7 +59,7 @@
                 this.isIndeterminate = checkedCount > 0 && checkedCount < this.tables.length;
             },
             selectTables: function () {
-                this.$store.commit("updateSelectedTables", this.selectedTables);
+                this.$store.commit("updateSysConfig", {tables: this.selectedTables});
                 this.$router.push("/config");
             },
         }

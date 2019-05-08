@@ -5,6 +5,7 @@ import tech.washmore.autocodeplus.util.Strings;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Data
@@ -17,6 +18,9 @@ public class SysConfig {
     private String daoPackage;
     private String mapperPath;
     private List<String> tables;
+
+    private List<String> tablePrefixes;
+
     private Map<String, String> customTemplates;
     private Map<String, String> ext;
 

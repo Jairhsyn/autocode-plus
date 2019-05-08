@@ -28,7 +28,7 @@ public class TableModel {
     }
 
     public List<String> getImports() {
-        return this.columns.stream().filter(col -> col.getJavaClass().getClassLoader() != null).map(c -> c.getJavaClass().getName()).distinct().sorted().collect(Collectors.toList());
+        return this.columns.stream().map(c -> c.getJavaClass().getName()).filter(n -> !n.startsWith("java.lang.")).distinct().sorted().collect(Collectors.toList());
     }
 
     private List<ColumnField> columns;

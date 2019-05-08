@@ -31,30 +31,30 @@ public class DbConfig {
         if (checkConnection()) {
             return this.dbconfig;
         }
-        this.dataSource  = DataSourceBuilder.create()
+        this.dataSource = DataSourceBuilder.create()
                 .url(dbconfig.getUrl())
                 .username(dbconfig.getUsername())
                 .password(dbconfig.getPassword())
                 .build();
 
-
         if (checkConnection()) {
-            defaultListableBeanFactory.registerSingleton("datasource", this.dataSource );
-            autowireCapableBeanFactory.autowireBean(this.dataSource );
+            defaultListableBeanFactory.registerSingleton("datasource", this.dataSource);
+            autowireCapableBeanFactory.autowireBean(this.dataSource);
             return this.dbconfig = dbconfig;
         }
         throw new InvalidParamException(1, "请输入正确的数据库配置");
     }
 
     private boolean checkConnection() {
-        try {
-            if (this.dataSource != null && this.dataSource.getConnection() != null) {
-                return true;
-            }
+        if (this.dataSource == null) {
+            return false;
+        }
+        try (Connection connection = this.dataSource.getConnection()) {
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
+        return true;
     }
 
     public DataSource getDataSource() {

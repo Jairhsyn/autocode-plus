@@ -12,7 +12,7 @@ import ${imp};
  * @since ${.now?date?string["yyyy年MM月dd日"]}
  */
 public class ${model.modelName} implements java.io.Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = ${randomLong?string["0"]}L;
 <#list model.columns as col>
     /**
      * ${col.columnName}<#if 0 < col.coloumComment?length>(</#if>${col.coloumComment}<#if 0 < col.coloumComment?length>)</#if> 默认值:${col.defaultValue}
@@ -20,6 +20,7 @@ public class ${model.modelName} implements java.io.Serializable {
     private ${col.javaClass.simpleName} ${col.fieldName};
 </#list>
 <#list model.columns as col>
+
     /**
      * ${col.columnName}<#if 0 < col.coloumComment?length>(</#if>${col.coloumComment}<#if 0 < col.coloumComment?length>)</#if> 默认值:${col.defaultValue}
      */
@@ -31,6 +32,7 @@ public class ${model.modelName} implements java.io.Serializable {
         this.${col.fieldName} = ${col.fieldName};
     }
 </#list>
+
     @Override
     public String toString() {
         return "${model.modelName?cap_first}{" +
