@@ -41,22 +41,13 @@
         data() {
             return {
                 config: {
-                    rootDir: 'temp',
-                    sourcePath: '/src/main/java/',
-                    resourcePath: '/src/main/resources/',
-                    modelPackage: 'tech.washmore.model',
-                    servicePackage: 'tech.washmore.service',
-                    daoPackage: 'tech.washmore.dao',
-                    mapperPath: 'mappers',
-                    tablePrefixes: [],
-                    tables: [],
                 },
             }
         },
         name: "Config",
         mounted:
             function () {
-                this.config = this.$store.state.sysConfig;
+                this.config = {...this.config, ...this.$store.state.sysConfig};
             }
         ,
         computed: {
