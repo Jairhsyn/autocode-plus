@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 @Data
 public class TableModel {
     private String tableName;
+    private String tableOriginalName;
+
     private String tableComment;
 
     public String getModelName() {

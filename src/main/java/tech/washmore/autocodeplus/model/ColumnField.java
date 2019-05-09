@@ -15,7 +15,7 @@ public class ColumnField {
     private boolean primaryKey;
     private boolean uniqueKey;
 
-    private String tableName;
+    private String tableOriginalName;
     private String databaseName;
     private String columnName;
     private String jdbcType;

@@ -26,18 +26,18 @@ public class TableService {
 
     public TableModel getTableModelByTableName(String tableName, SysConfig config) {
         TableModel tm = new TableModel();
-
+        tm.setTableOriginalName(tableName.toUpperCase());
         if (CollectionUtils.isEmpty(config.getTablePrefixes())) {
-            tm.setTableName(tableName.toUpperCase());
+            tm.setTableName(tm.getTableOriginalName());
         } else {
             for (String tablePrefix : config.getTablePrefixes()) {
-                if (tableName.toUpperCase().startsWith(tablePrefix.toUpperCase())) {
-                    tm.setTableName(tableName.toUpperCase().substring(tablePrefix.length()));
+                if (tm.getTableOriginalName().startsWith(tablePrefix.toUpperCase())) {
+                    tm.setTableName(tm.getTableOriginalName().substring(tablePrefix.length()));
                     break;
                 }
             }
             if (StringUtils.isEmpty(tm.getTableName())) {
-                tm.setTableName(tableName.toUpperCase());
+                tm.setTableName(tm.getTableOriginalName());
             }
         }
         String tableComment = this.queryTableCommnet(tableName);
@@ -47,7 +47,7 @@ public class TableService {
             JSONObject json = this.queryColumnExt(tableName, cf.getColumnName());
             cf.setColoumComment(Objects.toString(json.getString("COMMENT"), ""));
             cf.setDefaultValue(Objects.toString(json.getString("DEFAULT"), ""));
-            cf.setTableName(tm.getTableName());
+            cf.setTableOriginalName(tm.getTableOriginalName());
         });
         tm.setColumns(columnFields);
 

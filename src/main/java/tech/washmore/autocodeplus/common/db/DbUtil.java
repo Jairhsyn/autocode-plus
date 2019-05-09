@@ -50,7 +50,6 @@ public class DbUtil {
             return Arrays.stream(metaData.getFields()).map(f -> {
                 ColumnField md = new ColumnField();
                 md.setDatabaseName(f.getDatabaseName());
-                md.setTableName(f.getTableName());
                 md.setColumnName(f.getName());
                 md.setJdbcType(f.getMysqlType().getName());
                 md.setAutoIncrement(f.isAutoIncrement());

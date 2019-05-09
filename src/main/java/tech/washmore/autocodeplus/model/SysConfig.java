@@ -21,9 +21,6 @@ public class SysConfig {
 
     private List<String> tablePrefixes;
 
-    private Map<String, String> customTemplates;
-    private Map<String, String> ext;
-
     public String getModelFullPath() {
         return rootDir + sourcePath + modelPackage.replace(".", "/");
     }

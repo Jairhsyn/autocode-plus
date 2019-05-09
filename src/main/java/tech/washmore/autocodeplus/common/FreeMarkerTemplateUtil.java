@@ -17,8 +17,7 @@ public class FreeMarkerTemplateUtil {
             temp.process(params, writer);
             return writer.toString();
         } catch (IOException | TemplateException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }
