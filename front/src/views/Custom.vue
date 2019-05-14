@@ -24,10 +24,7 @@
                         <el-button size="small" type="primary">点击上传</el-button>
                         <div slot="tip" class="el-upload__tip">推荐上传ftl文件，且不超过500kb</div>
                     </el-upload>
-                    <a style="margin-left: 20%" href="/file/template/dao.ftl">
-                        <el-button  size="small" type="primary">下载dao默认模板
-                        </el-button>
-                    </a>
+
                 </el-form-item>
                 <el-form-item label="dao文件名"
                               v-show="custom.daoEnable"
@@ -63,10 +60,7 @@
                         <el-button size="small" type="primary">点击上传</el-button>
                         <div slot="tip" class="el-upload__tip">推荐上传ftl文件，且不超过500kb</div>
                     </el-upload>
-                    <a style="margin-left: 20%" href="/file/template/mapper.ftl">
-                        <el-button  size="small" type="primary">下载mapper默认模板
-                        </el-button>
-                    </a>
+
                 </el-form-item>
                 <el-form-item label="mapper文件名"
                               v-show="custom.mapperEnable"
@@ -102,10 +96,7 @@
                         <el-button size="small" type="primary">点击上传</el-button>
                         <div slot="tip" class="el-upload__tip">推荐上传ftl文件，且不超过500kb</div>
                     </el-upload>
-                    <a style="margin-left: 20%" href="/file/template/model.ftl">
-                        <el-button  size="small" type="primary">下载model默认模板
-                        </el-button>
-                    </a>
+
                 </el-form-item>
                 <el-form-item label="model文件名"
                               v-show="custom.modelEnable"
@@ -121,8 +112,11 @@
                     </el-select>
                 </el-form-item>
             </div>
-            <el-button size="small" type="primary" @click="addOther">添加模板</el-button>
             其他自定义模板:
+            <el-button size="small" type="primary" @click="addOther">添加模板</el-button>
+            <a style="margin-left: 20%" href="/file/template/templates.zip">
+                打包下载所有默认模板(供参考)
+            </a>
             <el-form-item
                     v-for="(file, index) in custom.otherFiles"
                     :label="'模板' + (index+1)"
@@ -161,8 +155,8 @@
             <div
                     style="border: #aae6d8 1px solid; margin:5px 0;"
             >
-                <el-button size="small" type="primary" @click="addVariable">添加变量</el-button>
                 用户自定义变量(在模板中用${ext.key}访问对应的value值):
+                <el-button size="small" type="primary" @click="addVariable">添加变量</el-button>
                 <el-form-item
                         v-for="(variable, index) in custom.variables"
                         :label="'变量' + (index+1)"
