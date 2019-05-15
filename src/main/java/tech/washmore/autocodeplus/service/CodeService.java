@@ -12,6 +12,7 @@ import tech.washmore.autocodeplus.model.CustomConfig;
 import tech.washmore.autocodeplus.model.SysConfig;
 import tech.washmore.autocodeplus.model.TableModel;
 import tech.washmore.autocodeplus.model.param.AllConfig;
+import tech.washmore.autocodeplus.model.param.OtherFile;
 import tech.washmore.autocodeplus.model.param.TemplateFile;
 
 import java.io.File;
@@ -35,15 +36,46 @@ public class CodeService {
             if (CollectionUtils.isEmpty(tms)) {
                 throw new InvalidParamException("未查询到任何有效的表!请检查配置项");
             }
+
             generateModels(config.getSysConfig(), config.getExtConfig(), tms);
 
             generateDaos(config.getSysConfig(), config.getExtConfig(), tms);
 
             generateMappers(config.getSysConfig(), config.getExtConfig(), tms);
 
+            generateOthers(config.getSysConfig(), config.getExtConfig(), tms);
             return true;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    private void generateOthers(SysConfig config, CustomConfig customConfig, List<TableModel> tms) {
+        List<OtherFile> otherFiles = customConfig.getOtherFiles();
+        if (CollectionUtils.isEmpty(otherFiles)) {
+            return;
+        }
+        for (OtherFile other : otherFiles) {
+            if (other.isEachTable()) {
+                for (TableModel tm : tms) {
+                    Map<String, Object> params = ImmutableMap.of(
+                            "randomLong", new Random().nextLong(),
+                            "context", config,
+                            "model", tm,
+                            "ext", customConfig.getExt()
+                    );
+                    String output = FreeMarkerTemplateUtil.build(other.getContent(), params);
+                    writeCode(config.getRootDir() + FreeMarkerTemplateUtil.build(other.getFilePath(), params), FreeMarkerTemplateUtil.build(other.getFileNameExpression(), params), output, other.isOverride());
+                }
+            } else {
+                Map<String, Object> params = ImmutableMap.of(
+                        "randomLong", new Random().nextLong(),
+                        "context", config,
+                        "ext", customConfig.getExt()
+                );
+                String output = FreeMarkerTemplateUtil.build(other.getContent(), params);
+                writeCode(config.getRootDir() + FreeMarkerTemplateUtil.build(other.getFilePath(), params), FreeMarkerTemplateUtil.build(other.getFileNameExpression(), params), output, other.isOverride());
+            }
         }
     }
 
@@ -108,12 +140,12 @@ public class CodeService {
         generateCustemTemplates(config.getDaoFullPath(), config, customConfig, tms, modelFiles);
     }
 
-    private void generateCustemTemplates(String path, SysConfig sysConfig, CustomConfig customConfig, List<TableModel> tms, List<TemplateFile> modelFiles) throws IOException {
+    private void generateCustemTemplates(String path, SysConfig config, CustomConfig customConfig, List<TableModel> tms, List<TemplateFile> modelFiles) throws IOException {
         for (TableModel tm : tms) {
             for (TemplateFile mf : modelFiles) {
                 Map<String, Object> params = ImmutableMap.of(
                         "randomLong", new Random().nextLong(),
-                        "context", sysConfig,
+                        "context", config,
                         "model", tm,
                         "ext", customConfig.getExt()
                 );

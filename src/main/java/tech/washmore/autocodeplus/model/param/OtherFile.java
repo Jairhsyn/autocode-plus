@@ -8,4 +8,5 @@ public class OtherFile {
     private boolean eachTable;
     private String filePath;
     private String content;
+    private boolean override;
 }

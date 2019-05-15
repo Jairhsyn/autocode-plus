@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class SysConfig {
+
     private String rootDir;
     private String sourcePath;
     private String resourcePath;
@@ -36,4 +37,5 @@ public class SysConfig {
     public String getMapperFullPath() {
         return rootDir + resourcePath + mapperPath;
     }
+
 }

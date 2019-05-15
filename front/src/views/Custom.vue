@@ -130,6 +130,13 @@
                             inactive-text="否">
                     </el-switch>
                 </el-form-item>
+                <el-form-item label="是否覆盖文件">
+                    <el-switch
+                            v-model="file.override"
+                            active-text="是"
+                            inactive-text="否">
+                    </el-switch>
+                </el-form-item>
                 <el-form-item label="文件名路径">
                     <el-input v-model="file.filePath"></el-input>
                 </el-form-item>
@@ -199,6 +206,7 @@
                         eachTable: false,
                         filePath: '',
                         content: '',
+                        override: true,
                     }],
                     variables: [
                         {
@@ -287,6 +295,7 @@
                     eachTable: false,
                     filePath: '',
                     content: '',
+                    override: true,
                 })
             },
             deleteOneOfVariables: function (index) {

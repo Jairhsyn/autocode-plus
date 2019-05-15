@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tech.washmore.autocodeplus.common.result.JAssert;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -35,17 +36,6 @@ public class FileController {
         response.addHeader("Content-Disposition", "attachment;fileName=" + templateFileName);
 
         if ("templates.zip".equals(templateFileName)) {
-
-//            File parent = new File(System.getProperty("java.io.tmpdir"), "autocode");
-//            if (parent.exists()) {
-//                parent.delete();
-//            }
-//            parent.mkdirs();
-//            copyResourcesToTempDictionary("", "templates", parent);
-//
-//            //File parent1 = new File(this.getClass().getResource("/templates").getFile());
-//
-//            zip(out, parent, "");
             OutputStream ops = response.getOutputStream();
             ZipOutputStream out = new ZipOutputStream(ops);
 
@@ -54,9 +44,9 @@ public class FileController {
             out.close();
             ops.flush();
             ops.close();
-
         } else {
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("templates/" + templateFileName);
+            JAssert.found(inputStream != null, String.format("未找到对应的资源%s!", templateFileName));
             String template = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             Writer writer = response.getWriter();
             writer.write(template);
@@ -64,7 +54,6 @@ public class FileController {
             writer.close();
         }
     }
-
 
     public void copyResourcesToTempDictionary(String sourceParentPath, String name, File tempParent) throws Exception {
         String path = sourceParentPath + "/" + name;
