@@ -11,6 +11,7 @@
                             inactive-text="关闭">
                     </el-switch>
                     <el-upload
+                            :file-list="custom.daoFiles"
                             v-show="custom.daoEnable"
                             action="/file/parse?type=dao"
                             :on-remove="handleRemove"
@@ -47,6 +48,7 @@
                             inactive-text="关闭">
                     </el-switch>
                     <el-upload
+                            :file-list="custom.mapperFiles"
                             v-show="custom.mapperEnable"
                             action="/file/parse?type=mapper"
                             :on-remove="handleRemove"
@@ -83,6 +85,7 @@
                             inactive-text="关闭">
                     </el-switch>
                     <el-upload
+                            :file-list="custom.modelFiles"
                             v-show="custom.modelEnable"
                             action="/file/parse?type=model"
                             :on-remove="handleRemove"
@@ -144,6 +147,8 @@
                     <el-input v-model="file.fileNameExpression"></el-input>
                 </el-form-item>
                 <el-upload
+
+                        :file-list="file.name?[file]:[]"
                         :action="'/file/parse?type=other&index='+index"
                         :on-remove="handleRemove"
                         :before-remove="beforeRemove"
@@ -201,19 +206,8 @@
                     modelFiles: [],
                     modelFileNames: [],
 
-                    otherFiles: [{
-                        fileNameExpression: '',
-                        eachTable: false,
-                        filePath: '',
-                        content: '',
-                        override: true,
-                    }],
-                    variables: [
-                        {
-                            key: '',
-                            vale: '',
-                        }
-                    ]
+                    otherFiles: [],
+                    variables: [],
                 },
             }
         },
@@ -239,6 +233,7 @@
             chooseFiles: function (res, fileList) {
                 if (res.type === 'other') {
                     this.custom.otherFiles[res.index].content = res.content;
+                    this.custom.otherFiles[res.index].name = res.name;
                     return;
                 }
 
@@ -296,6 +291,7 @@
                     filePath: '',
                     content: '',
                     override: true,
+                    name: '',
                 })
             },
             deleteOneOfVariables: function (index) {
@@ -331,6 +327,7 @@
                     extConfig: this.custom,
                 }).then((res) => {
                     console.info('res', res);
+                    this.$store.commit('updateExtConfig', this.custom);
                     loading.close();
                     this.$alert("代码生成已完成,请检查对应的文件夹和文件,如果结果和预期不一致,请查看应用日志排查问题.", "恭喜!", {
                         confirmButtonText: "我知道了"

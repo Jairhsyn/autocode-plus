@@ -29,7 +29,10 @@ public class DbConfig {
 
     public Db initConfig(Db dbconfig) {
         if (checkConnection()) {
-            return this.dbconfig;
+            //refresh
+           //unregist
+            defaultListableBeanFactory.destroySingleton("datasource");
+            autowireCapableBeanFactory.destroyBean(this.dataSource);
         }
         this.dataSource = DataSourceBuilder.create()
                 .url(dbconfig.getUrl())
