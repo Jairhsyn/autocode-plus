@@ -1,7 +1,6 @@
 package tech.washmore.autocodeplus.controller;
 
 import com.google.common.collect.ImmutableMap;
-import jdk.internal.util.xml.impl.Input;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.util.CollectionUtils;
@@ -39,7 +38,18 @@ public class FileController {
             OutputStream ops = response.getOutputStream();
             ZipOutputStream out = new ZipOutputStream(ops);
 
-            zipResources(out, "", "templates");
+            File parent = new File(System.getProperty("java.io.tmpdir"), "~tmp");
+
+            if (parent.exists()) {
+                parent.delete();
+            }
+            parent.mkdirs();
+            System.out.println("parent:"+parent.getPath());
+            copyResourcesToTempDictionary("", "templates", parent);
+
+            zip(out, parent, "");
+
+           // zipResources(out, "", "templates");
 
             out.close();
             ops.flush();
@@ -80,7 +90,9 @@ public class FileController {
 
     public void zipResources(ZipOutputStream out, String sourceParentPath, String name) throws Exception {
         String path = sourceParentPath + "/" + name;
+        System.out.println("path:" + path);
         InputStream ips = this.getClass().getResourceAsStream(path);
+        System.out.println("ips instanceof ByteArrayInputStream:" + (ips instanceof ByteArrayInputStream));
         if (ips instanceof ByteArrayInputStream) {
             //取出文件夹中的文件（或子文件夹）
             List<String> children = IOUtils.readLines(ips, StandardCharsets.UTF_8);

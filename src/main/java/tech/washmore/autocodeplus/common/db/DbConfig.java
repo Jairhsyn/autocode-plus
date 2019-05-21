@@ -2,10 +2,15 @@ package tech.washmore.autocodeplus.common.db;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.ImmutableMap;
+import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import tech.washmore.autocodeplus.common.result.exceptions.AccessDeniedException;
 import tech.washmore.autocodeplus.common.result.exceptions.InvalidParamException;
@@ -23,14 +28,16 @@ public class DbConfig {
     private AutowireCapableBeanFactory autowireCapableBeanFactory;
     @Autowired
     private DefaultListableBeanFactory defaultListableBeanFactory;
-
+    @Autowired
+    private ApplicationContext applicationContext;
     private DataSource dataSource;
     private Db dbconfig = new Db();
 
     public Db initConfig(Db dbconfig) {
         if (checkConnection()) {
-            //refresh
-           //unregist
+            //关闭现有的数据库连接
+            applicationContext.getBean(HikariDataSource.class).close();
+            //注销bean
             defaultListableBeanFactory.destroySingleton("datasource");
             autowireCapableBeanFactory.destroyBean(this.dataSource);
         }
@@ -77,5 +84,6 @@ public class DbConfig {
         }
         throw new AccessDeniedException("请先初始化数据库配置!");
     }
+
 
 }
