@@ -18,7 +18,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="url">
-                    <el-input v-model="dbConfig.url"></el-input>
+                    <el-input v-model="dbConfig.url"
+                              placeholder='如果是在线体验,则请使用公网能访问到的数据库配置!'
+                    ></el-input>
                 </el-form-item>
                 <el-form-item label="username">
                     <el-input v-model="dbConfig.username"></el-input>
@@ -41,8 +43,8 @@
         data() {
             return {
                 dbConfig: {
-                    url: 'jdbc:mysql://localhost:3306/jyb?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true\n',
-                    username: 'root',
+                    url: '',
+                    username: '',
                     password: '',
                 },
                 history: [],

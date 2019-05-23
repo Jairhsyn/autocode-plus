@@ -18,6 +18,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 })
 public class AppStarter {
     public static void main(String[] args) {
-        SpringApplication.run(AppStarter.class);
+        SpringApplication.run(AppStarter.class, args);
     }
 }

@@ -25,10 +25,11 @@ import java.util.Random;
 
 @Service
 public class CodeService {
+    private static final String OUTPUT_PATH_PREFIX = System.getProperty("java.io.tmpdir") + "/autocode/output/";
     @Autowired
     private TableService tableService;
 
-    public boolean process(AllConfig config) {
+    public String process(AllConfig config) {
         try {
             //此方法返回读取文件字节的方式在linux系统中无异。
 
@@ -37,6 +38,14 @@ public class CodeService {
                 throw new InvalidParamException("未查询到任何有效的表!请检查配置项");
             }
 
+            File root = new File(OUTPUT_PATH_PREFIX + config.getSysConfig().getRootDir());
+            if (!root.isDirectory()) {
+                root.delete();
+            } else if (!root.exists()) {
+                root.mkdirs();
+            }
+
+
             generateModels(config.getSysConfig(), config.getExtConfig(), tms);
 
             generateDaos(config.getSysConfig(), config.getExtConfig(), tms);
@@ -44,7 +53,8 @@ public class CodeService {
             generateMappers(config.getSysConfig(), config.getExtConfig(), tms);
 
             generateOthers(config.getSysConfig(), config.getExtConfig(), tms);
-            return true;
+
+            return root.getPath();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -150,7 +160,6 @@ public class CodeService {
                         "ext", customConfig.getExt()
                 );
                 String output = FreeMarkerTemplateUtil.build(mf.getContent(), params);
-                System.out.println(output);
                 writeCode(path, FreeMarkerTemplateUtil.build(mf.getFileNameExpression(), params), output, true);
             }
         }
@@ -158,7 +167,7 @@ public class CodeService {
 
     private void writeCode(String parentPath, String fileName, String code, boolean override) {
         try {
-            File parent = new File(parentPath);
+            File parent = new File(OUTPUT_PATH_PREFIX + parentPath);
             if (!parent.exists()) {
                 parent.mkdirs();
             }
@@ -170,6 +179,7 @@ public class CodeService {
             }
             target.delete();
             target.createNewFile();
+            System.out.println("target:" + target.getPath());
             FileUtils.writeStringToFile(target, code, StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new RuntimeException(e);

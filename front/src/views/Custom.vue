@@ -329,9 +329,19 @@
                     console.info('res', res);
                     this.$store.commit('updateExtConfig', this.custom);
                     loading.close();
-                    this.$alert("代码生成已完成,请检查对应的文件夹和文件,如果结果和预期不一致,请查看应用日志排查问题.", "恭喜!", {
-                        confirmButtonText: "我知道了"
-                    })
+                    this.$confirm("代码生成已完成,如果是在线体验本应用,请点击代码下载将生成的代码下载到本地,如果是本地运行本应用,请到目录" + res.data + "检查生成的对应文件夹和文件,如果结果和预期不一致,请查看应用日志排查问题.", "恭喜!", {
+                        confirmButtonText: '代码下载',
+                        cancelButtonText: '我知道了',
+                    }).then(() => {
+
+                        location.href='/code/download?path=' + encodeURIComponent(res.data);
+                        this.$message({
+                            type: 'success',
+                            message: '下载成功!'
+                        });
+                    }).catch(action => {
+
+                    });
                 }).catch((err) => {
                     console.error('err', err);
                     this.$store.commit('minus');

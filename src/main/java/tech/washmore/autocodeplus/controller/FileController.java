@@ -1,16 +1,23 @@
 package tech.washmore.autocodeplus.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tech.washmore.autocodeplus.common.result.JAssert;
+import tech.washmore.autocodeplus.util.JarUtil;
+import tech.washmore.autocodeplus.util.ZipUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -28,50 +35,39 @@ public class FileController {
         }
     }
 
-    @GetMapping("/file/template/{templateFileName}")
-    public void process(@PathVariable("templateFileName") String templateFileName, HttpServletResponse response) throws Exception {
+    @GetMapping("/file/template/templates.zip")
+    public void process(HttpServletResponse response) throws Exception {
         response.setContentType("application/force-download;charset=utf8");
         response.setCharacterEncoding("utf-8");
-        response.addHeader("Content-Disposition", "attachment;fileName=" + templateFileName);
+        response.addHeader("Content-Disposition", "attachment;fileName=templates.zip");
+        OutputStream ops = response.getOutputStream();
+        ZipOutputStream out = new ZipOutputStream(ops);
 
-        if ("templates.zip".equals(templateFileName)) {
-            OutputStream ops = response.getOutputStream();
-            ZipOutputStream out = new ZipOutputStream(ops);
-
-            File parent = new File(System.getProperty("java.io.tmpdir"), "~tmp");
-
-            if (parent.exists()) {
-                parent.delete();
-            }
-            parent.mkdirs();
-            System.out.println("parent:"+parent.getPath());
-            copyResourcesToTempDictionary("", "templates", parent);
-
-            zip(out, parent, "");
-
-           // zipResources(out, "", "templates");
-
-            out.close();
-            ops.flush();
-            ops.close();
+        if (JarUtil.isJar()) {
+            this.downloadInJar(out);
         } else {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("templates/" + templateFileName);
-            JAssert.found(inputStream != null, String.format("未找到对应的资源%s!", templateFileName));
-            String template = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-            Writer writer = response.getWriter();
-            writer.write(template);
-            writer.flush();
-            writer.close();
+            ZipUtil.zipResources(out, "", "templates");
         }
+
+        out.close();
+        ops.flush();
+        ops.close();
     }
 
-    public void copyResourcesToTempDictionary(String sourceParentPath, String name, File tempParent) throws Exception {
+    private void downloadInJar(ZipOutputStream out) throws Exception {
+        ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver(getClass().getClassLoader());
+        Resource[] resources = resourceResolver.getResources("templates/**/*");
+        ZipUtil.zipResourcesInJar(out, resources);
+    }
+
+    private void copyResourcesToTempDictionary(String sourceParentPath, String name, File tempParent) throws Exception {
         String path = sourceParentPath + "/" + name;
         InputStream ips = this.getClass().getResourceAsStream(path);
         File file = new File(tempParent, name);
         if (file.exists()) {
             file.delete();
         }
+
         if (ips instanceof ByteArrayInputStream) {
             //文件夹
             file.mkdirs();
@@ -88,50 +84,4 @@ public class FileController {
         }
     }
 
-    public void zipResources(ZipOutputStream out, String sourceParentPath, String name) throws Exception {
-        String path = sourceParentPath + "/" + name;
-        System.out.println("path:" + path);
-        InputStream ips = this.getClass().getResourceAsStream(path);
-        System.out.println("ips instanceof ByteArrayInputStream:" + (ips instanceof ByteArrayInputStream));
-        if (ips instanceof ByteArrayInputStream) {
-            //取出文件夹中的文件（或子文件夹）
-            List<String> children = IOUtils.readLines(ips, StandardCharsets.UTF_8);
-            if (CollectionUtils.isEmpty(children)) {
-                //如果文件夹为空，则只需在目的地zip文件中写入一个目录进入点
-                out.putNextEntry(new ZipEntry(sourceParentPath));
-            } else {
-                for (String child : children) {
-                    zipResources(out, path, child);
-                }
-            }
-        } else {
-            //如果不是目录（文件夹），即为文件，则先写入目录进入点，之后将文件写入zip文件中
-            out.putNextEntry(new ZipEntry(path));
-            IOUtils.write(IOUtils.toByteArray(ips), out);
-            out.flush();
-        }
-    }
-
-    public void zip(ZipOutputStream out, File sourceFile, String base) throws Exception {
-        //如果路径为目录（文件夹）
-        if (sourceFile.isDirectory()) {
-            //取出文件夹中的文件（或子文件夹）
-            File[] fileList = sourceFile.listFiles();
-            if (fileList.length == 0) {
-                //如果文件夹为空，则只需在目的地zip文件中写入一个目录进入点
-                System.out.println(base + "/");
-                out.putNextEntry(new ZipEntry(base + "/"));
-            } else {
-                //如果文件夹不为空，则递归调用compress，文件夹中的每一个文件（或文件夹）进行压缩
-                for (File file : fileList) {
-                    zip(out, file, base + "/" + file.getName());
-                }
-            }
-        } else {
-            //如果不是目录（文件夹），即为文件，则先写入目录进入点，之后将文件写入zip文件中
-            out.putNextEntry(new ZipEntry(base));
-            IOUtils.write(FileUtils.readFileToByteArray(sourceFile), out);
-            out.flush();
-        }
-    }
 }
