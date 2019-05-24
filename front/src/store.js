@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         sysConfig: {
+            replaceAll: true,
             rootDir: 'temp',
             sourcePath: '/src/main/java/',
             resourcePath: '/src/main/resources/',
@@ -32,7 +33,7 @@ export default new Vuex.Store({
             arr.unshift({
                 ...state,
                 currentStep: 0,
-                timeStamp:' < '+ state.dbConfig.url.match(/\/\/[^/]+\/([^?]+)\?/)[1] + ' > ' + moment().format("YYYY年MM月DD日 HH:mm:ss")
+                timeStamp: ' < ' + state.dbConfig.url.match(/\/\/[^/]+\/([^?]+)\?/)[1] + ' > ' + moment().format("YYYY年MM月DD日 HH:mm:ss")
             });
             if (arr.length > 10) {
                 arr.pop();

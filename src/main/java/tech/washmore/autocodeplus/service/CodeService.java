@@ -39,12 +39,9 @@ public class CodeService {
             }
 
             File root = new File(OUTPUT_PATH_PREFIX + config.getSysConfig().getRootDir());
-            if (!root.isDirectory()) {
-                root.delete();
-            } else if (!root.exists()) {
-                root.mkdirs();
+            if (!root.isDirectory() || config.getSysConfig().isReplaceAll()) {
+                this.deleteDir(root.getAbsolutePath());
             }
-
 
             generateModels(config.getSysConfig(), config.getExtConfig(), tms);
 
@@ -179,10 +176,28 @@ public class CodeService {
             }
             target.delete();
             target.createNewFile();
-            System.out.println("target:" + target.getPath());
             FileUtils.writeStringToFile(target, code, StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
+    public void deleteDir(String dirPath) {
+        File file = new File(dirPath);
+        if (file.isFile()) {
+            System.out.println("file deleted:" + file.getAbsolutePath());
+            file.delete();
+        } else {
+            File[] files = file.listFiles();
+            if (files == null) {
+                file.delete();
+            } else {
+                for (int i = 0; i < files.length; i++) {
+                    this.deleteDir(files[i].getAbsolutePath());
+                }
+                file.delete();
+            }
+        }
+    }
+
 }

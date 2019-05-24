@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 @Data
 public class SysConfig {
 
+    private boolean replaceAll;
     private String rootDir;
     private String sourcePath;
     private String resourcePath;

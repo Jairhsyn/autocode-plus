@@ -4,6 +4,13 @@
             <el-form-item label="项目根路径">
                 <el-input v-model="config.rootDir"></el-input>
             </el-form-item>
+            <el-form-item label="是否覆盖文件夹">
+                <el-switch
+                        v-model="config.replaceAll"
+                        active-text="开启"
+                        inactive-text="关闭">
+                </el-switch>
+            </el-form-item>
             <el-form-item label="source路径">
                 <el-input v-model="config.sourcePath"></el-input>
             </el-form-item>
@@ -40,8 +47,7 @@
     export default {
         data() {
             return {
-                config: {
-                },
+                config: {},
             }
         },
         name: "Config",
