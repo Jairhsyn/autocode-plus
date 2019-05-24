@@ -31,7 +31,7 @@ public class CodeService {
 
     static {
         try {
-            OUTPUT_PATH_PREFIX = new File(System.getProperty("java.io.tmpdir")).getCanonicalPath() + "autocode/output/";
+            OUTPUT_PATH_PREFIX = new File(System.getProperty("java.io.tmpdir")).getCanonicalPath() + "/autocode/output/";
         } catch (IOException e) {
             throw new NotFoundException(-1, "OUTPUT_PATH_PREFIX初始化错误!", e);
         }
@@ -70,7 +70,7 @@ public class CodeService {
 
             generateOthers(config.getSysConfig(), config.getExtConfig(), tms);
 
-            return root.getPath();
+            return root.getCanonicalPath();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
