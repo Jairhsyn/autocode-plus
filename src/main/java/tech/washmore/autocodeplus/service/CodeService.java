@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tech.washmore.autocodeplus.common.FreeMarkerTemplateUtil;
+import tech.washmore.autocodeplus.common.result.exceptions.AccessDeniedException;
 import tech.washmore.autocodeplus.common.result.exceptions.InvalidParamException;
+import tech.washmore.autocodeplus.common.result.exceptions.NotFoundException;
 import tech.washmore.autocodeplus.model.CustomConfig;
 import tech.washmore.autocodeplus.model.SysConfig;
 import tech.washmore.autocodeplus.model.TableModel;
@@ -25,7 +27,16 @@ import java.util.Random;
 
 @Service
 public class CodeService {
-    private static final String OUTPUT_PATH_PREFIX = System.getProperty("java.io.tmpdir") + "/autocode/output/";
+    public static final String OUTPUT_PATH_PREFIX;
+
+    static {
+        try {
+            OUTPUT_PATH_PREFIX = new File(System.getProperty("java.io.tmpdir")).getCanonicalPath() + "autocode/output/";
+        } catch (IOException e) {
+            throw new NotFoundException(-1, "OUTPUT_PATH_PREFIX初始化错误!", e);
+        }
+    }
+
     @Autowired
     private TableService tableService;
 
@@ -38,9 +49,17 @@ public class CodeService {
                 throw new InvalidParamException("未查询到任何有效的表!请检查配置项");
             }
 
+
             File root = new File(OUTPUT_PATH_PREFIX + config.getSysConfig().getRootDir());
+            System.out.println("root.getCanonicalPath():" + root.getCanonicalPath());
+
+
+            if (!root.getCanonicalPath().startsWith(OUTPUT_PATH_PREFIX)) {
+                throw new AccessDeniedException(String.format("你想拿%s这个路径干啥???", root.getCanonicalPath()));
+            }
+
             if (!root.isDirectory() || config.getSysConfig().isReplaceAll()) {
-                this.deleteDir(root.getAbsolutePath());
+                this.deleteDir(root.getCanonicalPath());
             }
 
             generateModels(config.getSysConfig(), config.getExtConfig(), tms);
@@ -169,6 +188,10 @@ public class CodeService {
                 parent.mkdirs();
             }
             File target = new File(parent, fileName);
+            System.out.println("parent.getCanonicalPath():" + target.getCanonicalPath());
+            if (!target.getCanonicalPath().startsWith(OUTPUT_PATH_PREFIX)) {
+                throw new AccessDeniedException(String.format("你想拿%s这个路径干啥???", target.getCanonicalPath()));
+            }
             if (!target.exists()) {
                 target.createNewFile();
             } else if (!override) {

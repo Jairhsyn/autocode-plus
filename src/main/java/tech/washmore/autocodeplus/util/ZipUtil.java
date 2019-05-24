@@ -7,6 +7,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -49,7 +50,7 @@ public class ZipUtil {
         }
     }
 
-    public synchronized static void zip(ZipOutputStream out, File sourceFile, String base) throws Exception {
+    public synchronized static void zip(ZipOutputStream out, File sourceFile, String base) throws IOException {
         //如果路径为目录（文件夹）
         if (sourceFile.isDirectory()) {
             //取出文件夹中的文件（或子文件夹）
