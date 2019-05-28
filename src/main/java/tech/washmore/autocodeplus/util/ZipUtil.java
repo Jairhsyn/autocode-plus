@@ -40,7 +40,7 @@ public class ZipUtil {
 
     public synchronized static void zipResourcesInJar(ZipOutputStream out, Resource[] resources) throws Exception {
         for (Resource resource : resources) {
-            String tempUrl = resource.getURL().toString().substring(resource.getURL().toString().lastIndexOf("!/") + 2);
+            String tempUrl = resource.getURL().toString().substring(resource.getURL().toString().lastIndexOf("!") + 2);
             out.putNextEntry(new ZipEntry(tempUrl));
             if (resource.contentLength() > 0) {
                 InputStream ips = resource.getInputStream();
