@@ -23,7 +23,7 @@
         </if>
     </select>
 
-    <select id="countByMap" parameterType="Map" resultMap="Integer">
+    <select id="countByMap" parameterType="Map" resultType="int">
         SELECT
             COUNT(*)
         FROM ${model.tableName}
@@ -52,7 +52,7 @@
         </#if>
     </select>
 
-    <select id="countByExample" parameterType="${context.modelPackage}.${model.modelName}" resultMap="Integer">
+    <select id="countByExample" parameterType="${context.modelPackage}.${model.modelName}" resultType="int">
         SELECT
             COUNT(*)
         FROM ${model.tableName}

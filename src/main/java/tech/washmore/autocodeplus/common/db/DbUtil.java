@@ -1,5 +1,6 @@
 package tech.washmore.autocodeplus.common.db;
 
+import org.apache.ibatis.type.JdbcType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -10,6 +11,7 @@ import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import tech.washmore.autocodeplus.model.ColumnField;
 
 import java.sql.Connection;
+import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
@@ -51,7 +53,7 @@ public class DbUtil {
                 ColumnField md = new ColumnField();
                 md.setDatabaseName(f.getDatabaseName());
                 md.setColumnName(f.getName());
-                md.setJdbcType(f.getMysqlType().getName());
+                md.setJdbcType(JdbcType.forCode(f.getMysqlType().getJdbcType()).name());
                 md.setAutoIncrement(f.isAutoIncrement());
                 md.setNotNull(f.isNotNull());
                 md.setPrimaryKey(f.isPrimaryKey());

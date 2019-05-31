@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.Arrays;
 
 public class JarUtil {
+
     private static final byte[] JAR_MAGIC = {'P', 'K', 3, 4};
 
     public static boolean isJar() {
