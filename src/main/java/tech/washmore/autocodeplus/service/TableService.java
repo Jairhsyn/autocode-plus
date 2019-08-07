@@ -26,12 +26,12 @@ public class TableService {
 
     public TableModel getTableModelByTableName(String tableName, SysConfig config) {
         TableModel tm = new TableModel();
-        tm.setTableOriginalName(tableName.toUpperCase());
+        tm.setTableOriginalName(tableName);
         if (CollectionUtils.isEmpty(config.getTablePrefixes())) {
             tm.setTableName(tm.getTableOriginalName());
         } else {
             for (String tablePrefix : config.getTablePrefixes()) {
-                if (tm.getTableOriginalName().startsWith(tablePrefix.toUpperCase())) {
+                if (tm.getTableOriginalName().toUpperCase().startsWith(tablePrefix.toUpperCase())) {
                     tm.setTableName(tm.getTableOriginalName().substring(tablePrefix.length()));
                     break;
                 }

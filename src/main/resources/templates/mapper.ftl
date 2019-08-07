@@ -7,7 +7,7 @@
     <select id="selectByMap" parameterType="Map" resultMap="BaseResultMap">
         SELECT
             <include refid="Base_Column_List"/>
-        FROM ${model.tableName}
+        FROM ${model.tableOriginalName}
         <where>
         <#list model.columns as col>
             <if test="${col.fieldName} != null">
@@ -26,7 +26,7 @@
     <select id="countByMap" parameterType="Map" resultType="int">
         SELECT
             COUNT(*)
-        FROM ${model.tableName}
+        FROM ${model.tableOriginalName}
         <where>
         <#list model.columns as col>
             <if test="${col.fieldName} != null">
@@ -39,7 +39,7 @@
     <select id="selectByExample" parameterType="${context.modelPackage}.${model.modelName}" resultMap="BaseResultMap">
         SELECT
             <include refid="Base_Column_List"/>
-        FROM ${model.tableName}
+        FROM ${model.tableOriginalName}
         <where>
         <#list model.columns as col>
             <if test="${col.fieldName} != null">
@@ -55,7 +55,7 @@
     <select id="countByExample" parameterType="${context.modelPackage}.${model.modelName}" resultType="int">
         SELECT
             COUNT(*)
-        FROM ${model.tableName}
+        FROM ${model.tableOriginalName}
         <where>
         <#list model.columns as col>
             <if test="${col.fieldName} != null">
@@ -66,7 +66,7 @@
     </select>
 
     <insert id="batchInsert" parameterType="List" <#if model.primaryKeyCol??>keyProperty = "${model.primaryKeyCol.fieldName}"</#if>>
-        INSERT INTO ${model.tableName}
+        INSERT INTO ${model.tableOriginalName}
             (<include refid="Base_Column_List"/>)
         VALUES
         <foreach collection="list" item="item" separator=",">
@@ -76,7 +76,7 @@
     </insert>
 
     <insert id="insertSelective" parameterType="${context.modelPackage}.${model.modelName}" <#if model.primaryKeyCol??>keyProperty = "${model.primaryKeyCol.fieldName}"</#if>>
-        INSERT INTO ${model.tableName}
+        INSERT INTO ${model.tableOriginalName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
         <#list model.columns as col>
             <if test="${col.fieldName} != null">
@@ -97,12 +97,12 @@
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="<#if model.primaryKeyCol.javaClass.classLoader??>${model.primaryKeyCol.javaClass.name}<#else>${model.primaryKeyCol.javaClass.simpleName}</#if>">
         SELECT
             <include refid="Base_Column_List"/>
-        FROM user_wx
+        FROM ${model.tableOriginalName}
         WHERE ${model.primaryKeyCol.columnName} = <@hash model.primaryKeyCol.fieldName + ",jdbcType=" + model.primaryKeyCol.jdbcType/>
     </select>
 
     <update id="updateByPrimaryKeySelective" parameterType="${context.modelPackage}.${model.modelName}">
-        UPDATE ${model.tableName}
+        UPDATE ${model.tableOriginalName}
         <set>
     <#list model.columns as col>
         <#if model.primaryKeyCol.fieldName != col.fieldName>
@@ -116,12 +116,12 @@
     </update>
 
 	<delete id="deleteByPrimaryKey" parameterType="<#if model.primaryKeyCol.javaClass.classLoader??>${model.primaryKeyCol.javaClass.name}<#else>${model.primaryKeyCol.javaClass.simpleName}</#if>">
-        DELETE FROM ${model.tableName}
+        DELETE FROM ${model.tableOriginalName}
         WHERE ${model.primaryKeyCol.columnName} = <@hash model.primaryKeyCol.fieldName + ",jdbcType=" + model.primaryKeyCol.jdbcType/>
     </delete>
 
 	<delete id="batchDeleteByPrimaryKey" parameterType="List">
-        DELETE FROM ${model.tableName}
+        DELETE FROM ${model.tableOriginalName}
         <where>
             ${model.primaryKeyCol.columnName} IN
             <foreach collection="list" item="item" separator="," open="(" close=")">
@@ -132,7 +132,7 @@
 </#if>
 
     <delete id="deleteByMap" parameterType="Map">
-        DELETE FROM ${model.tableName}
+        DELETE FROM ${model.tableOriginalName}
         <where>
         <#list model.columns as col>
             <if test="${col.fieldName} != null">
