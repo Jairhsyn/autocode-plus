@@ -45,8 +45,8 @@ public class TableService {
         List<ColumnField> columnFields = dbUtil.queryColumnMetaDatasByTableName(tableName);
         columnFields.forEach(cf -> {
             JSONObject json = this.queryColumnExt(tableName, cf.getColumnName());
-            cf.setColoumComment(Objects.toString(json.getString("COMMENT"), ""));
-            cf.setDefaultValue(Objects.toString(json.getString("DEFAULT"), ""));
+            cf.setColoumComment(Objects.toString(json.getString("COLUMN_COMMENT"), ""));
+            cf.setDefaultValue(Objects.toString(json.getString("COLUMN_DEFAULT"), ""));
             cf.setTableOriginalName(tm.getTableOriginalName());
         });
         tm.setColumns(columnFields);
