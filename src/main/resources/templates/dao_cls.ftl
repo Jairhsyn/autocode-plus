@@ -19,13 +19,22 @@ import java.util.Map;
  */
 public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
     /**
+     * 区分不同命名空间的同名sql
+     *
+     * @return
+     */
+    protected String mapper() {
+        return "${model.modelName}Mapper";
+    }
+
+    /**
      * 多条件组合查询符合条件的${model.modelName}对象列表,支持分页查询(使用start和offset参数)
      *
      * @param params 组合条件
      * @return 符合查询条件的${model.modelName}对象列表
      */
     public List<${model.modelName}> selectByMap(Map<String, Object> params) {
-        return ${ext.sqlSessionCommon}.selectList("selectByMap", params);
+        return ${ext.sqlSessionCommon}.selectList(st("selectByMap"), params);
     }
 
     /**
@@ -35,7 +44,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 符合查询条件的${model.modelName}对象数量
      */
     public int countByMap(Map<String, Object> params) {
-        return ${ext.sqlSessionCommon}.selectOne("countByMap", params);
+        return ${ext.sqlSessionCommon}.selectOne(st("countByMap"), params);
     }
 
     /**
@@ -45,7 +54,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 符合查询条件的${model.modelName}对象列表
      */
     public List<${model.modelName}> selectByExample(${model.modelName} example) {
-        return ${ext.sqlSessionCommon}.selectList("selectByExample", example);
+        return ${ext.sqlSessionCommon}.selectList(st("selectByExample"), example);
     }
 
     /**
@@ -55,7 +64,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 符合查询条件的${model.modelName}对象数量
      */
     public int countByExample(${model.modelName} example) {
-        return ${ext.sqlSessionCommon}.selectOne("countByExample", example);
+        return ${ext.sqlSessionCommon}.selectOne(st("countByExample"), example);
     }
 
     /**
@@ -65,7 +74,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 受影响行数
      */
     public int batchInsert(List<${model.modelName}> list) {
-        return ${ext.sqlSessionCommon}.insert("batchInsert", list);
+        return ${ext.sqlSessionCommon}.insert(st("batchInsert"), list);
     }
 
     /**
@@ -75,7 +84,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 受影响行数
      */
     public int insertSelective(${model.modelName} ${model.modelName?uncap_first}) {
-        return ${ext.sqlSessionCommon}.insert("insertSelective", ${model.modelName?uncap_first});
+        return ${ext.sqlSessionCommon}.insert(st("insertSelective"), ${model.modelName?uncap_first});
     }
 <#if model.primaryKeyCol??>
 
@@ -86,7 +95,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return ${model.modelName}对象(允许为空)
      */
     public ${model.modelName} selectByPrimaryKey(${model.primaryKeyCol.javaClass.simpleName} ${model.primaryKeyCol.fieldName}) {
-        return ${ext.sqlSessionCommon}.selectOne("selectByPrimaryKey", ${model.primaryKeyCol.fieldName});
+        return ${ext.sqlSessionCommon}.selectOne(st("selectByPrimaryKey"), ${model.primaryKeyCol.fieldName});
     }
 
     /**
@@ -96,7 +105,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 受影响行数
      */
     public int updateByPrimaryKeySelective(${model.modelName} ${model.modelName?uncap_first}) {
-        return ${ext.sqlSessionCommon}.update("updateByPrimaryKeySelective", ${model.modelName?uncap_first});
+        return ${ext.sqlSessionCommon}.update(st("updateByPrimaryKeySelective"), ${model.modelName?uncap_first});
     }
 
     /**
@@ -106,7 +115,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 受影响行数
      */
     public int deleteByPrimaryKey(${model.primaryKeyCol.javaClass.simpleName} ${model.primaryKeyCol.fieldName}) {
-        return ${ext.sqlSessionCommon}.delete("deleteByPrimaryKey", ${model.primaryKeyCol.fieldName});
+        return ${ext.sqlSessionCommon}.delete(st("deleteByPrimaryKey"), ${model.primaryKeyCol.fieldName});
     }
 
     /**
@@ -116,7 +125,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 受影响行数
      */
     public int batchDeleteByPrimaryKey(List<${model.primaryKeyCol.javaClass.simpleName}> list) {
-        return ${ext.sqlSessionCommon}.delete("batchDeleteByPrimaryKey", list);
+        return ${ext.sqlSessionCommon}.delete(st("batchDeleteByPrimaryKey"), list);
     }
 </#if>
 
@@ -127,7 +136,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 受影响行数
      */
     public int deleteByMap(Map<String, Object> params) {
-        return ${ext.sqlSessionCommon}.delete("deleteByMap", params);
+        return ${ext.sqlSessionCommon}.delete(st("deleteByMap"), params);
     }
 <#if model.primaryKeyCol??>
 
@@ -138,7 +147,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return ${model.modelName}对象(允许为空)
      */
     public ${model.modelName} selectByPrimaryKeyReadOnly(${model.primaryKeyCol.javaClass.simpleName} ${model.primaryKeyCol.fieldName}) {
-        return ${ext.sqlSessionReadonly}.selectOne("selectByPrimaryKey", ${model.primaryKeyCol.fieldName});
+        return ${ext.sqlSessionReadonly}.selectOne(st("selectByPrimaryKey"), ${model.primaryKeyCol.fieldName});
     }
 </#if>
 
@@ -149,7 +158,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 符合查询条件的${model.modelName}对象列表
      */
     public List<${model.modelName}> selectByMapReadOnly(Map<String, Object> params) {
-        return ${ext.sqlSessionReadonly}.selectList("selectByMap", params);
+        return ${ext.sqlSessionReadonly}.selectList(st("selectByMap"), params);
     }
 
     /**
@@ -159,7 +168,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 符合查询条件的${model.modelName}对象数量
      */
     public int countByMapReadOnly(Map<String, Object> params) {
-        return ${ext.sqlSessionReadonly}.selectOne("countByMap", params);
+        return ${ext.sqlSessionReadonly}.selectOne(st("countByMap"), params);
     }
 
     /**
@@ -169,7 +178,7 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 符合查询条件的${model.modelName}对象列表
      */
     public List<${model.modelName}> selectByExampleReadOnly(${model.modelName} example) {
-        return ${ext.sqlSessionReadonly}.selectList("selectByExample", example);
+        return ${ext.sqlSessionReadonly}.selectList(st("selectByExample"), example);
     }
 
     /**
@@ -179,6 +188,6 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 符合查询条件的${model.modelName}对象数量
      */
     public int countByExampleReadOnly(${model.modelName} example) {
-        return ${ext.sqlSessionReadonly}.selectOne("countByExample", example);
+        return ${ext.sqlSessionReadonly}.selectOne(st("countByExample"), example);
     }
 }

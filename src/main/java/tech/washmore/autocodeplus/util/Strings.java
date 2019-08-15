@@ -13,7 +13,15 @@ public class Strings {
         if (param == null || "".equals(param.trim())) {
             return "";
         }
-        param=param.toLowerCase();
+        //如果不含下划线,直接只处理首字母大小写
+        if (!param.contains(String.valueOf(UNDERLINE))) {
+            if (firstUpper) {
+                return param.substring(0, 1).toUpperCase().concat(param.substring(1));
+            }
+            return param;
+        }
+
+        param = param.toLowerCase();
         int len = param.length();
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++) {

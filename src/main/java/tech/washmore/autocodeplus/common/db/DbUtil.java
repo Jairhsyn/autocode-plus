@@ -63,7 +63,11 @@ public class DbUtil {
                     md.setJavaClass(byte[].class);
                 } else {
                     try {
-                        md.setJavaClass(Class.forName(f.getMysqlType().getClassName()));
+                        String clsName = f.getMysqlType().getClassName();
+                        if ("java.sql.Timestamp".equals(f.getMysqlType().getClassName())) {
+                            clsName = "java.util.Date";
+                        }
+                        md.setJavaClass(Class.forName(clsName));
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
