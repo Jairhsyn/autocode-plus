@@ -9,6 +9,7 @@ import ${model.primaryKeyCol.javaClass.name};
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Washmore
@@ -125,6 +126,9 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 受影响行数
      */
     public int batchDeleteByPrimaryKey(List<${model.primaryKeyCol.javaClass.simpleName}> list) {
+        if (list == null || list.isEmpty()) {
+            return 0;
+        }
         return ${ext.sqlSessionCommon}.delete(st("batchDeleteByPrimaryKey"), list);
     }
 </#if>
@@ -136,6 +140,9 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
      * @return 受影响行数
      */
     public int deleteByMap(Map<String, Object> params) {
+        if (params == null || params.isEmpty() || params.values().stream().noneMatch(Objects::nonNull)) {
+            return 0;
+        }
         return ${ext.sqlSessionCommon}.delete(st("deleteByMap"), params);
     }
 <#if model.primaryKeyCol??>
