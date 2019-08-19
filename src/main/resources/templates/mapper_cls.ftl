@@ -92,8 +92,8 @@
         </#list>
         </trim>
     </insert>
-
 <#if model.primaryKeyCol??>
+
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="<#if model.primaryKeyCol.javaClass.classLoader??>${model.primaryKeyCol.javaClass.name}<#else>${model.primaryKeyCol.javaClass.simpleName}</#if>">
         SELECT
             <include refid="Base_Column_List"/>
@@ -126,9 +126,74 @@
             ${model.primaryKeyCol.columnName} IN
             <foreach collection="list" item="item" separator="," open="(" close=")">
                 <@hash "item"/>
-            </foreach>
+			</foreach>
         </where>
     </delete>
+</#if>
+<#if model.uniqueKeyCols??>
+    <#list model.uniqueKeyCols as uniqueKeyCol>
+	
+	<select id="selectBy${uniqueKeyCol.fieldName?cap_first}" resultMap="BaseResultMap" parameterType="<#if uniqueKeyCol.javaClass.classLoader??>${uniqueKeyCol.javaClass.name}<#else>${uniqueKeyCol.javaClass.simpleName}</#if>">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM ${model.tableOriginalName}
+        WHERE ${uniqueKeyCol.columnName} = <@hash uniqueKeyCol.fieldName + ",jdbcType=" + uniqueKeyCol.jdbcType/>
+		LIMIT 1
+    </select>
+
+    <update id="updateBy${uniqueKeyCol.fieldName?cap_first}Selective" parameterType="${context.modelPackage}.${model.modelName}">
+        UPDATE ${model.tableOriginalName}
+        <set>
+    <#list model.columns as col>
+        <#if uniqueKeyCol.fieldName != col.fieldName>
+		<#if model.primaryKeyCol.fieldName != col.fieldName>
+            <if test="${col.fieldName} != null">
+                ${col.columnName} = <@hash col.fieldName + ",jdbcType=" + col.jdbcType/>,
+            </if>       
+		</#if>
+        </#if>
+    </#list>
+        </set>
+        WHERE ${uniqueKeyCol.columnName} = <@hash uniqueKeyCol.fieldName + ",jdbcType=" + uniqueKeyCol.jdbcType/>
+    </update>
+
+	<delete id="deleteBy${uniqueKeyCol.fieldName?cap_first}" parameterType="<#if uniqueKeyCol.javaClass.classLoader??>${uniqueKeyCol.javaClass.name}<#else>${uniqueKeyCol.javaClass.simpleName}</#if>">
+        DELETE FROM ${model.tableOriginalName}
+        WHERE ${uniqueKeyCol.columnName} = <@hash uniqueKeyCol.fieldName + ",jdbcType=" + uniqueKeyCol.jdbcType/>
+    </delete>
+	</#list>
+</#if>
+<#if model.foreignKeyCols??>
+    <#list model.foreignKeyCols as foreignKeyCol>
+	
+	<select id="selectBy${foreignKeyCol.fieldName?cap_first}" resultMap="BaseResultMap" parameterType="<#if foreignKeyCol.javaClass.classLoader??>${foreignKeyCol.javaClass.name}<#else>${foreignKeyCol.javaClass.simpleName}</#if>">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM ${model.tableOriginalName}
+        WHERE ${foreignKeyCol.columnName} = <@hash foreignKeyCol.fieldName + ",jdbcType=" + foreignKeyCol.jdbcType/>
+    </select>
+
+    <update id="updateBy${foreignKeyCol.fieldName?cap_first}Selective" parameterType="${context.modelPackage}.${model.modelName}">
+        UPDATE ${model.tableOriginalName}
+        <set>
+    <#list model.columns as col>
+        <#if foreignKeyCol.fieldName != col.fieldName>
+		<#if model.primaryKeyCol.fieldName != col.fieldName>
+            <if test="${col.fieldName} != null">
+                ${col.columnName} = <@hash col.fieldName + ",jdbcType=" + col.jdbcType/>,
+            </if>       
+		</#if>
+        </#if>
+    </#list>
+        </set>
+        WHERE ${foreignKeyCol.columnName} = <@hash foreignKeyCol.fieldName + ",jdbcType=" + foreignKeyCol.jdbcType/>
+    </update>
+
+	<delete id="deleteBy${foreignKeyCol.fieldName?cap_first}" parameterType="<#if foreignKeyCol.javaClass.classLoader??>${foreignKeyCol.javaClass.name}<#else>${foreignKeyCol.javaClass.simpleName}</#if>">
+        DELETE FROM ${model.tableOriginalName}
+        WHERE ${foreignKeyCol.columnName} = <@hash foreignKeyCol.fieldName + ",jdbcType=" + foreignKeyCol.jdbcType/>
+    </delete>
+	</#list>
 </#if>
 
     <delete id="deleteByMap" parameterType="Map">

@@ -132,6 +132,74 @@ public abstract class X${model.modelName}Dao extends ${ext.daoManagerName} {
         return ${ext.sqlSessionCommon}.delete(st("batchDeleteByPrimaryKey"), list);
     }
 </#if>
+<#if model.uniqueKeyCols??>
+    <#list model.uniqueKeyCols as uniqueKeyCol>
+	
+    /**
+     * 根据${uniqueKeyCol.fieldName}字段查询${model.modelName}对象
+     *
+     * @param ${uniqueKeyCol.fieldName} ${uniqueKeyCol.coloumComment} 
+     * @return ${model.modelName}对象(允许为空)
+     */
+    public ${model.modelName} selectBy${uniqueKeyCol.fieldName?cap_first}(${uniqueKeyCol.javaClass.simpleName} ${uniqueKeyCol.fieldName}) {
+        return ${ext.sqlSessionCommon}.selectOne(st("selectBy${uniqueKeyCol.fieldName?cap_first}"), ${uniqueKeyCol.fieldName});
+    }
+
+    /**
+     * 根据${uniqueKeyCol.fieldName}字段更新${model.modelName}(非空字段)对象
+     *
+     * @param ${model.modelName?uncap_first} 待更新${model.modelName}对象
+     * @return 受影响行数
+     */
+    public int updateBy${uniqueKeyCol.fieldName?cap_first}Selective(${model.modelName} ${model.modelName?uncap_first}) {
+        return ${ext.sqlSessionCommon}.update(st("updateBy${uniqueKeyCol.fieldName?cap_first}Selective"), ${model.modelName?uncap_first});
+    }
+
+    /**
+     * 根据${uniqueKeyCol.fieldName}字段删除${model.modelName}对象
+     *
+     * @param ${uniqueKeyCol.fieldName} ${uniqueKeyCol.coloumComment}
+     * @return 受影响行数
+     */
+    public int deleteBy${uniqueKeyCol.fieldName?cap_first}(${uniqueKeyCol.javaClass.simpleName} ${uniqueKeyCol.fieldName}) {
+        return ${ext.sqlSessionCommon}.delete(st("deleteBy${uniqueKeyCol.fieldName?cap_first}"), ${uniqueKeyCol.fieldName});
+    }
+    </#list>
+</#if>
+<#if model.foreignKeyCols??>
+    <#list model.foreignKeyCols as foreignKeyCol>
+
+    /**
+     * 根据${foreignKeyCol.fieldName}字段查询${model.modelName}对象列表
+     *
+     * @param ${foreignKeyCol.fieldName} ${foreignKeyCol.coloumComment}
+     * @return ${model.modelName}对象(允许为空)
+     */
+    public List<${model.modelName}> selectBy${foreignKeyCol.fieldName?cap_first}(${foreignKeyCol.javaClass.simpleName} ${foreignKeyCol.fieldName}) {
+		return ${ext.sqlSessionCommon}.selectOne(st("selectBy${foreignKeyCol.fieldName?cap_first}"), ${foreignKeyCol.fieldName});
+    }
+
+    /**
+     * 根据${foreignKeyCol.fieldName}字段更新${model.modelName}(非空字段)对象
+     *
+     * @param ${model.modelName?uncap_first} 待更新${model.modelName}对象
+     * @return 受影响行数
+     */
+    public int updateBy${foreignKeyCol.fieldName?cap_first}Selective(${model.modelName} ${model.modelName?uncap_first}) {
+		return ${ext.sqlSessionCommon}.update(st("updateBy${foreignKeyCol.fieldName?cap_first}Selective"), ${model.modelName?uncap_first});
+    }
+
+    /**
+     * 根据${foreignKeyCol.fieldName}字段删除${model.modelName}对象
+     *
+     * @param ${foreignKeyCol.fieldName} ${foreignKeyCol.coloumComment}
+     * @return 受影响行数
+     */
+    public int deleteBy${foreignKeyCol.fieldName?cap_first}(${foreignKeyCol.javaClass.simpleName} ${foreignKeyCol.fieldName}) {
+		return ${ext.sqlSessionCommon}.delete(st("deleteBy${foreignKeyCol.fieldName?cap_first}"), ${foreignKeyCol.fieldName});
+    }
+    </#list>
+</#if>
 
     /**
      * 根据多条件组合批量删除${model.modelName}

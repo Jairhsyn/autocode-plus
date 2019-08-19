@@ -1,7 +1,6 @@
 package ${context.modelPackage};
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 <#list model.imports as imp>
 import ${imp};
@@ -16,6 +15,9 @@ import ${imp};
  */
 @Data
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ${model.modelName} implements java.io.Serializable {
     private static final long serialVersionUID = ${randomLong?string["0"]}L;
 <#list model.columns as col>

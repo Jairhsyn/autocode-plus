@@ -46,6 +46,7 @@ public class TableService {
         columnFields.forEach(cf -> {
             JSONObject json = this.queryColumnExt(tableName, cf.getColumnName());
             cf.setColoumComment(Objects.toString(json.getString("COLUMN_COMMENT"), ""));
+            cf.setUniqueKey(cf.isUniqueKey() || cf.getColoumComment().contains("#唯一#"));
             cf.setDefaultValue(Objects.toString(json.getString("COLUMN_DEFAULT"), ""));
             cf.setTableOriginalName(tm.getTableOriginalName());
         });

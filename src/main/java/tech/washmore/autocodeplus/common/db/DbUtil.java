@@ -64,7 +64,8 @@ public class DbUtil {
                 } else {
                     try {
                         String clsName = f.getMysqlType().getClassName();
-                        if ("java.sql.Timestamp".equals(f.getMysqlType().getClassName())) {
+                        if ("java.sql.Timestamp".equals(f.getMysqlType().getClassName())
+                                || "java.sql.Date".equals(f.getMysqlType().getClassName())) {
                             clsName = "java.util.Date";
                         }
                         md.setJavaClass(Class.forName(clsName));
