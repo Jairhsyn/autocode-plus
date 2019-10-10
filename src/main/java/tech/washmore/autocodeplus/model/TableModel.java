@@ -40,4 +40,9 @@ public class TableModel {
     }
 
     private List<ColumnField> columns;
+
+    public List<ColumnField> getColumnsWithoutPrimaryKey() {
+        return columns.stream().filter(col -> !col.isPrimaryKey()).collect(Collectors.toList());
+    }
+
 }

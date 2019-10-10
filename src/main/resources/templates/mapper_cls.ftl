@@ -67,10 +67,10 @@
 
     <insert id="batchInsert" parameterType="List" <#if model.primaryKeyCol??>keyProperty = "${model.primaryKeyCol.fieldName}"</#if>>
         INSERT INTO ${model.tableOriginalName}
-            (<include refid="Base_Column_List"/>)
+            (<include refid="Base_Column_List_Without_PrimaryKey"/>)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (<#list model.columns as col><#if !col?is_first>,<#if col?index%4==0>
+            (<#list model.columnsWithoutPrimaryKey as col><#if !col?is_first>,<#if col?index%4==0>
             <#else>${' '}</#if></#if><@hash col.fieldName + ",jdbcType=" + col.jdbcType/></#list>)
         </foreach>
     </insert>
@@ -132,7 +132,7 @@
 </#if>
 <#if model.uniqueKeyCols??>
     <#list model.uniqueKeyCols as uniqueKeyCol>
-	
+
 	<select id="selectBy${uniqueKeyCol.fieldName?cap_first}" resultMap="BaseResultMap" parameterType="<#if uniqueKeyCol.javaClass.classLoader??>${uniqueKeyCol.javaClass.name}<#else>${uniqueKeyCol.javaClass.simpleName}</#if>">
         SELECT
             <include refid="Base_Column_List"/>
@@ -149,7 +149,7 @@
 		<#if model.primaryKeyCol.fieldName != col.fieldName>
             <if test="${col.fieldName} != null">
                 ${col.columnName} = <@hash col.fieldName + ",jdbcType=" + col.jdbcType/>,
-            </if>       
+            </if>
 		</#if>
         </#if>
     </#list>
@@ -165,7 +165,7 @@
 </#if>
 <#if model.foreignKeyCols??>
     <#list model.foreignKeyCols as foreignKeyCol>
-	
+
 	<select id="selectBy${foreignKeyCol.fieldName?cap_first}" resultMap="BaseResultMap" parameterType="<#if foreignKeyCol.javaClass.classLoader??>${foreignKeyCol.javaClass.name}<#else>${foreignKeyCol.javaClass.simpleName}</#if>">
         SELECT
             <include refid="Base_Column_List"/>
@@ -181,7 +181,7 @@
 		<#if model.primaryKeyCol.fieldName != col.fieldName>
             <if test="${col.fieldName} != null">
                 ${col.columnName} = <@hash col.fieldName + ",jdbcType=" + col.jdbcType/>,
-            </if>       
+            </if>
 		</#if>
         </#if>
     </#list>
@@ -222,4 +222,8 @@
         <#else>${' '}</#if></#if>${col.columnName}</#list>
     </sql>
 
+    <sql id="Base_Column_List_Without_PrimaryKey">
+        <#list model.columnsWithoutPrimaryKey as col><#if !col?is_first>,<#if col?index%4==0>
+        <#else>${' '}</#if></#if>${col.columnName}</#list>
+    </sql>
 </mapper>

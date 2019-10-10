@@ -67,10 +67,10 @@
 
     <insert id="batchInsert" parameterType="List" <#if model.primaryKeyCol??>keyProperty = "${model.primaryKeyCol.fieldName}"</#if>>
         INSERT INTO ${model.tableOriginalName}
-            (<include refid="Base_Column_List"/>)
+            (<include refid="Base_Column_List_Without_PrimaryKey"/>)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (<#list model.columns as col><#if !col?is_first>,<#if col?index%4==0>
+            (<#list model.columnsWithoutPrimaryKey as col><#if !col?is_first>,<#if col?index%4==0>
             <#else>${' '}</#if></#if><@hash col.fieldName + ",jdbcType=" + col.jdbcType/></#list>)
         </foreach>
     </insert>
@@ -157,4 +157,8 @@
         <#else>${' '}</#if></#if>${col.columnName}</#list>
     </sql>
 
+    <sql id="Base_Column_List_Without_PrimaryKey">
+        <#list model.columnsWithoutPrimaryKey as col><#if !col?is_first>,<#if col?index%4==0>
+        <#else>${' '}</#if></#if>${col.columnName}</#list>
+    </sql>
 </mapper>
