@@ -71,7 +71,7 @@
         VALUES
         <foreach collection="list" item="item" separator=",">
             (<#list model.columnsWithoutPrimaryKey as col><#if !col?is_first>,<#if col?index%4==0>
-            <#else>${' '}</#if></#if><@hash col.fieldName + ",jdbcType=" + col.jdbcType/></#list>)
+            <#else>${' '}</#if></#if><@hash "item." + col.fieldName + ",jdbcType=" + col.jdbcType/></#list>)
         </foreach>
     </insert>
 
