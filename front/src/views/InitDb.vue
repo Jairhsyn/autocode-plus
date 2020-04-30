@@ -45,7 +45,7 @@
         data() {
             return {
                 dbConfig: {
-                    url: 'jdbc:mysql://10.8.1.227:3306/huaqiao?allowMultiQueries=true&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&zeroDateTimeBehavior=convertToNull\n',
+                    url: 'jdbc:mysql://mysql-k8s.shtest.ke.com:3306/huaqiao?allowMultiQueries=true&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&zeroDateTimeBehavior=convertToNull\n',
                     username: 'huaqiao',
                     password: '2101901166',
                 },

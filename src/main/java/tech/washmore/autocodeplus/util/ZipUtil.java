@@ -14,6 +14,13 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * @author Washmore
+ * @version V1.0
+ * @summary zip压缩
+ * @Copyright (c) 2018, Washmore All Rights Reserved.
+ * @since 2018/1/15
+ */
 public class ZipUtil {
 
     public synchronized static void zipResources(ZipOutputStream out, String sourceParentPath, String name) throws Exception {
