@@ -15,9 +15,6 @@
             </if>
         </#list>
         </where>
-        <#if model.autoIncrementCol??>
-        ORDER BY `${model.autoIncrementCol.columnName}` DESC
-        </#if>
         <if test="start != null and offset != null">
             LIMIT <@hash "start"/>, <@hash "offset"/>
         </if>
@@ -47,9 +44,6 @@
             </if>
         </#list>
         </where>
-        <#if model.autoIncrementCol??>
-        ORDER BY `${model.autoIncrementCol.columnName}` DESC
-        </#if>
     </select>
 
     <select id="countByExample" parameterType="${context.modelPackage}.${model.modelName}" resultType="int">
